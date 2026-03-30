@@ -22,7 +22,34 @@ jobs:
 
       - name: Run Scraper
         run: python your_scraper_script.py # The script we built earlier
+# --- MAIN EXECUTION ---
+if __name__ == "__main__":
+    # This is the data that will turn into your website's rows
+    mock_html = """
+    <table>
+        <tr><th>Name</th><th>School</th><th>Event</th><th>Time</th></tr>
+        <tr><td>Noah Lyles</td><td>USA National Team</td><td>100m</td><td>9.83</td></tr>
+        <tr><td>Jane Smith</td><td>East High</td><td>100m</td><td>10.42</td></tr>
+        <tr><td>John Doe</td><td>West High</td><td>100m</td><td>10.50</td></tr>
+        <tr><td>Alice Blue</td><td>Central HS</td><td>1600m</td><td>4:12.10</td></tr>
+        <tr><td>Charlie Brown</td><td>East High</td><td>1600m</td><td>4:15.50</td></tr>
+        <tr><td>Bob Jones</td><td>West High</td><td>100m</td><td>10.80</td></tr>
+    </table>
+    """
 
+    engine = TrackRanker()
+    
+    # 1. Process the mock data
+    raw_data = engine.parse_html_results(mock_html)
+    
+    # 2. Generate the rankings
+    indiv_ranks, team_ranks = engine.generate_rankings(raw_data)
+
+    # 3. Save to CSV (This is what the website 'reads')
+    # Use 'national_v1' as the prefix so it matches your index.html
+    engine.save_results(indiv_ranks, team_ranks, prefix="national_v1")
+    
+    print("\nCheck your folder for 'national_v1_team_rankings.csv'!")
       - name: Commit and Push changes
         run: |
           git config --global user.name 'GitHub Action'
