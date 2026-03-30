@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>State Track Rankings</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #333; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>State Team Rankings</h1>
+    <table id="team-table">
+        <thead><tr><th>Rank</th><th>School</th><th>Points</th></tr></thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        // This pulls the CSV file that your Python script creates
+        Papa.parse("national_v1_team_rankings.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+                const tbody = document.querySelector("#team-table tbody");
+                results.data.forEach(row => {
+                    if(row.School) {
+                        let tr = `<tr><td>${row.Rank}</td><td>${row.School}</td><td>${row.Points}</td></tr>`;
+                        tbody.innerHTML += tr;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
